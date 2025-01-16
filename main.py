@@ -9,7 +9,7 @@ with dpg.font_registry():
 dpg.set_global_font_scale(1/FONT_SCALE)
 dpg.bind_font(font_medium)
 
-
+##################### Circuit Load FUNCTIONS #########################
 def add():
     dpg.add_input_int(parent='input_group')
 
@@ -17,7 +17,6 @@ def remove():
     numbers_tags = dpg.get_item_children('input_group', 1)
     if len(numbers_tags) > 1:
         dpg.delete_item(numbers_tags[-1])
-
 
 def print_numbers():
     numbers = [dpg.get_value(tag) for tag in dpg.get_item_children('input_group', 1)]
@@ -48,9 +47,10 @@ def print_numbers():
         dpg.set_value('current_total', "")
         dpg.set_value('breaker_status', "Breaker Status: N/A")
 
+######################################################################
 
 
-
+######################### CIRCUIT LOAD CALCULATOR ###########################
 with dpg.window(label="Circuit Load Calculator", tag="circuit_load_win", width=400, height=500, show=False):
     # dpg.add_text("INPUT PARAMETERS")
     dpg.add_text("Power Rating of Each Device (Watts):")
@@ -76,17 +76,26 @@ with dpg.window(label="Circuit Load Calculator", tag="circuit_load_win", width=4
     dpg.add_text("", tag='current_total')
     dpg.add_text("", tag='breaker_status')
     
+######################################################################
+
+with dpg.window(label="Fault Detection Dashboard", tag='fault_dashboard', width=500, height=500, show=False):
+    pass
 
 
+
+############################## MAIN WINDOW #################################
 with dpg.window(label="Main Window", tag='main_win', width=450, height=450):
     dpg.add_button(label="Circuit Load Calc", tag='circuit_load_button', callback=lambda: dpg.configure_item('circuit_load_win', show=True))
+    dpg.add_button(label="Fault Detection Dashbaord", tag='fault_dashboard_button', callback=lambda: dpg.configure_item('fault_dashboard', show=True))
 
 
 
     dpg.add_separator()
     dpg.add_button(label="Dev", tag="dev_btn", callback=lambda: dpg.show_debug())
-    dpg.add_button(label="Demo", tag="demo", callback=lambda: dpg.show_imgui_demo())
+    dpg.add_button(label="GUI Demo", tag="gui_demo", callback=lambda: dpg.show_imgui_demo())
+    dpg.add_button(label="Plot Demo", tag="plot_demo", callback=lambda: dpg.show_implot_demo())
 
+######################################################################
 
 
 dpg.create_viewport(title='BoilerPlate', x_pos=0, y_pos=0, width=900, height=600, clear_color=(42,113,124,255))

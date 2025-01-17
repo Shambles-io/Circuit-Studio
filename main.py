@@ -15,7 +15,11 @@ def test_callback(sender, app_data, user_data):
     print(sender)
     print(app_data)
     print(user_data)
+#######################################################
 
+
+
+################### FAULT DETECTION FUNCTIONS
 def add_light_param():
     with dpg.group(horizontal=True, parent='light_params_group'):
         dpg.add_input_int(tag=f'num_lights_{len(dpg.get_item_children("light_params_group", 1))}', width=200)
@@ -23,21 +27,16 @@ def add_light_param():
 
 
 def remove_light_param():
-    # with dpg.group(horizontal=True, parent='light_params_group'):
     children = dpg.get_item_children('light_params_group', 1)
     if children:
         dpg.delete_item(children[-1])
-
-
-
-
 
 ####################################################
 
 
 
 
-##################### Circuit Load FUNCTIONS #########################
+##################### CIRCUIT LOAD FUNCTIONS #########################
 def add():
     dpg.add_input_int(parent='input_group')
 
@@ -53,8 +52,6 @@ def print_numbers():
         power_total = sum(numbers)
         circuit_voltage = dpg.get_value('circuit_voltage')
         breaker_capacity = dpg.get_value('breaker_capacity')
-        # print(type(power_total))
-        # print(type(dpg.get_value('circuit_voltage')))
 
         if circuit_voltage > 0:
             total_current = power_total / circuit_voltage
@@ -116,8 +113,8 @@ with dpg.window(label="Energy Efficiency Silumator", tag='energy_eff_win', width
     with dpg.group(tag='light_params_group'):
         for i in range(4):
             with dpg.group(horizontal=True):
-                dpg.add_input_int(tag='num_lights_{i}', width=200)
-                dpg.add_input_int(tag='light_watts_{i}', width=200)
+                dpg.add_input_int(tag=f'num_lights_{i}', width=200)
+                dpg.add_input_int(tag=f'light_watts_{i}', width=200)
     
     
     with dpg.group(horizontal=True):

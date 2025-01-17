@@ -9,6 +9,34 @@ with dpg.font_registry():
 dpg.set_global_font_scale(1/FONT_SCALE)
 dpg.bind_font(font_medium)
 
+################## TESTING #############################
+
+def test_callback(sender, app_data, user_data):
+    print(sender)
+    print(app_data)
+    print(user_data)
+
+def add_light_param():
+    with dpg.group(horizontal=True, parent='light_params_group'):
+        dpg.add_input_int(tag=f'num_lights_{len(dpg.get_item_children("light_params_group", 1))}', width=200)
+        dpg.add_input_int(tag=f'light_watts_{len(dpg.get_item_children("light_params_group", 1))}', width=200)
+
+
+def remove_light_param():
+    # with dpg.group(horizontal=True, parent='light_params_group'):
+    children = dpg.get_item_children('light_params_group', 1)
+    if children:
+        dpg.delete_item(children[-1])
+
+
+
+
+
+####################################################
+
+
+
+
 ##################### Circuit Load FUNCTIONS #########################
 def add():
     dpg.add_input_int(parent='input_group')
@@ -78,15 +106,35 @@ with dpg.window(label="Circuit Load Calculator", tag="circuit_load_win", width=4
     
 ######################################################################
 
-with dpg.window(label="Fault Detection Dashboard", tag='fault_dashboard', width=500, height=500, show=False):
-    pass
+with dpg.window(label="Energy Efficiency Silumator", tag='energy_eff_win', width=500, height=500, show=False):
+
+    dpg.add_text("Lighting Parameters:")
+    with dpg.group(horizontal=True):
+        dpg.add_input_text(default_value='Number of Lights', width=200, enabled=False)
+        dpg.add_input_text(default_value='Wattage per Light', width=200, enabled=False)
+
+    with dpg.group(tag='light_params_group'):
+        for i in range(4):
+            with dpg.group(horizontal=True):
+                dpg.add_input_int(tag='num_lights_{i}', width=200)
+                dpg.add_input_int(tag='light_watts_{i}', width=200)
+    
+    
+    with dpg.group(horizontal=True):
+        dpg.add_button(label='Add Row', callback=add_light_param)
+        dpg.add_button(label='Remove Last Row', callback=remove_light_param)
+        # dpg.add_button(label='Print Numbers', callback=print_numbers)
+
+
+
+
 
 
 
 ############################## MAIN WINDOW #################################
 with dpg.window(label="Main Window", tag='main_win', width=450, height=450):
     dpg.add_button(label="Circuit Load Calc", tag='circuit_load_button', callback=lambda: dpg.configure_item('circuit_load_win', show=True))
-    dpg.add_button(label="Fault Detection Dashbaord", tag='fault_dashboard_button', callback=lambda: dpg.configure_item('fault_dashboard', show=True))
+    dpg.add_button(label="Fault Detection Dashbaord", tag='fault_dashboard_button', callback=lambda: dpg.configure_item('energy_eff_win', show=True))
 
 
 

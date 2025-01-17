@@ -19,11 +19,12 @@ def test_callback(sender, app_data, user_data):
 
 
 
-################### FAULT DETECTION FUNCTIONS
+################### FAULT DETECTION FUNCTIONS ###############
 def add_light_param():
     with dpg.group(horizontal=True, parent='light_params_group'):
         dpg.add_input_int(tag=f'num_lights_{len(dpg.get_item_children("light_params_group", 1))}', width=200)
         dpg.add_input_int(tag=f'light_watts_{len(dpg.get_item_children("light_params_group", 1))}', width=200)
+        dpg.add_input_int(tag=f'usage_hours_{len(dpg.get_item_children("light_params_group", 1))}', width=200)
 
 
 def remove_light_param():
@@ -31,7 +32,32 @@ def remove_light_param():
     if children:
         dpg.delete_item(children[-1])
 
-####################################################
+
+def calculate_energy():
+    # pass
+    # print(f"Number of light params: {len(dpg.get_item_children("light_params_group"))}")
+
+    total_energy = 0
+    children = dpg.get_item_children('light_params_group', 1)
+
+    for child in children:
+        row_children = dpg.get_item_children(child, 1)
+        if len(row_children) == 3:
+            num_lights = dpg.get_value(row_children[0])
+            light_watts = dpg.get_value(row_children[1])
+            usage_hours = dpg.get_value(row_children[2])
+
+        if num_lights > 0 and light_watts > 0 and usage_hours > 0:
+            energy = (num_lights * light_watts * usage_hours * 30) / 1000
+
+            total_energy += energy
+
+    dpg.set_value('energy_usage_output', f"Total Monthly Energy Consumption: {total_energy:.2f} kWh")
+
+
+
+
+###############################################################
 
 
 
@@ -103,24 +129,32 @@ with dpg.window(label="Circuit Load Calculator", tag="circuit_load_win", width=4
     
 ######################################################################
 
-with dpg.window(label="Energy Efficiency Silumator", tag='energy_eff_win', width=500, height=500, show=False):
+
+
+with dpg.window(label="Energy Efficiency Silumator", tag='energy_eff_win', width=650, height=500, show=False):
 
     dpg.add_text("Lighting Parameters:")
     with dpg.group(horizontal=True):
         dpg.add_input_text(default_value='Number of Lights', width=200, enabled=False)
         dpg.add_input_text(default_value='Wattage per Light', width=200, enabled=False)
+        dpg.add_input_text(default_value='Daily Usage Hours', width=200, enabled=False)
 
     with dpg.group(tag='light_params_group'):
         for i in range(4):
             with dpg.group(horizontal=True):
                 dpg.add_input_int(tag=f'num_lights_{i}', width=200)
                 dpg.add_input_int(tag=f'light_watts_{i}', width=200)
+                dpg.add_input_int(tag=f'usage_hours_{i}', width=200)
     
     
     with dpg.group(horizontal=True):
         dpg.add_button(label='Add Row', callback=add_light_param)
         dpg.add_button(label='Remove Last Row', callback=remove_light_param)
-        # dpg.add_button(label='Print Numbers', callback=print_numbers)
+        dpg.add_button(label='Calculate Energy Usage', callback=calculate_energy)
+
+    dpg.add_separator()
+    dpg.add_text("", tag='energy_usage_output')
+    
 
 
 

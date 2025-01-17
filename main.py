@@ -52,7 +52,11 @@ def calculate_energy():
 
             total_energy += energy
 
+    total_cost = total_energy * dpg.get_value('electricity_rate')
+    # print(total_cost)
+
     dpg.set_value('energy_usage_output', f"Total Monthly Energy Consumption: {total_energy:.2f} kWh")
+    dpg.set_value('total_energy_cost', f"Total Monthly Energy Electricity Cost: ${total_cost:.2f}")
 
 
 
@@ -146,6 +150,7 @@ with dpg.window(label="Energy Efficiency Silumator", tag='energy_eff_win', width
                 dpg.add_input_int(tag=f'light_watts_{i}', width=200)
                 dpg.add_input_int(tag=f'usage_hours_{i}', width=200)
     
+    dpg.add_input_float(label="Electricity Rate (per kWh)", tag='electricity_rate', width=175)
     
     with dpg.group(horizontal=True):
         dpg.add_button(label='Add Row', callback=add_light_param)
@@ -154,6 +159,7 @@ with dpg.window(label="Energy Efficiency Silumator", tag='energy_eff_win', width
 
     dpg.add_separator()
     dpg.add_text("", tag='energy_usage_output')
+    dpg.add_text("", tag='total_energy_cost')
     
 
 
